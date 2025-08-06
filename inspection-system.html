@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Navigation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-content, .print-content * {
+                visibility: visible;
+            }
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-page-break {
+                page-break-before: always;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #000;
+                padding-bottom: 20px;
+            }
+            .print-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            .print-table th, .print-table td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: left;
+                font-size: 12px;
+            }
+            .print-table th {
+                background-color: #f0f0f0;
+                font-weight: bold;
+            }
+            .print-signature {
+                margin-top: 40px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .print-signature div {
+                text-align: center;
+                width: 30%;
+            }
+            .print-signature-line {
+                border-top: 1px solid #000;
+                margin-top: 40px;
+                padding-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-600 to-blue-600 min-h-screen font-sans">
+    <!-- Page 1 -->
+    <div id="page1" class="min-h-screen flex items-center justify-center p-8">
+        <div class="bg-white rounded-2xl shadow-2xl p-12 max-w-lg w-full text-center">
+            <div class="mb-8">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-4xl">🔒</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">Data Privacy Act Reminder</h1>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6 text-left">
+                    <h3 class="font-semibold text-red-800 mb-3">⚠️ Republic Act No. 10173 - Data Privacy Act of 2012</h3>
+                    <div class="text-sm text-gray-700 space-y-3">
+                        <p><strong>Notice:</strong> This Inspection Request Form will collect the following personal information:</p>
+                        <ul class="ml-4 space-y-1">
+                            <li>• Contact number and email addresses (personal & institutional)</li>
+                            <li>• Full name and office/department information</li>
+                            <li>• Disbursing officer details and sector information</li>
+                            <li>• Purchase details, purpose, and financial information</li>
+                        </ul>
+                        <p><strong>Your Rights:</strong> You have the right to be informed, access, rectify, erase, restrict processing, data portability, and object to processing of your personal data.</p>
+                        <p><strong>Purpose:</strong> Data collected will be used solely for processing inspection requests and maintaining official records as required by institutional procedures.</p>
+                        <p><strong>Storage:</strong> Information is stored securely and will be retained according to institutional record-keeping policies.</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-6"><strong>Important:</strong> By proceeding, you consent to the collection and processing of your personal data as described above in accordance with the Data Privacy Act of 2012.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <button 
+                    onclick="disagreePrivacy()" 
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl w-full">
+                    ❌ Disagree & Exit
+                </button>
+                <button 
+                    onclick="agreePrivacy()" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl w-full">
+                    ✅ Agree & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page2" class="min-h-screen flex items-center justify-center p-8 hidden overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full my-8">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-4xl">📋</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">Inspection Request Form</h1>
+
+            </div>
+            
+            <form id="inspectionForm" class="space-y-6">
+                <!-- Purchase Type -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Purchase Type</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="purchases" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>UCSS Purchases</span>
+                            </label>
+                            <div id="ucssOptions" class="ml-8 mt-3 space-y-2 hidden">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="ucssSubType" value="external" class="text-blue-600">
+                                    <span>External</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="ucssSubType" value="internal" class="text-blue-600">
+                                    <span>Internal</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="ucssSubType" value="cashAdvance" class="text-blue-600">
+                                    <span>Cash Advance</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="postRepair" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>Post Repair/Waste Material</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="janitorial" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>Janitorial and Operation Purchase</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="cashAdvanceMain" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>Cash Advance</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="internal" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>Internal Funded</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="purchaseType" value="external" class="text-blue-600" onchange="toggleUCSSOptions()">
+                                <span>External Funded</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Contact Number</label>
+                        <input type="tel" id="contactNumber" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter contact number">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Personal Email</label>
+                        <input type="email" id="personalEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter personal email">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Institutional Webmail</label>
+                        <input type="email" id="institutionalEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter institutional email">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Requested By</label>
+                        <input type="text" id="requestedBy" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter requester name">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Name of Disbursing Officer</label>
+                        <input type="text" id="disbursingOfficer" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter disbursing officer name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Office and Department</label>
+                        <input type="text" id="officeDepartment" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter office and department">
+                    </div>
+                </div>
+
+                <!-- Sector -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Sector</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="OP" class="text-blue-600">
+                            <span>OP</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="OVPC" class="text-blue-600">
+                            <span>OVPC</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="OVPred" class="text-blue-600">
+                            <span>OVPred</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="OPVA" class="text-blue-600">
+                            <span>OPVA</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="OVPAA" class="text-blue-600">
+                            <span>OVPAA</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="VPC" class="text-blue-600">
+                            <span>VPC</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="sector" value="VPSS" class="text-blue-600">
+                            <span>VPSS</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Purpose and Particulars -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Purpose</label>
+                        <textarea id="purpose" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter purpose of request"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Particulars</label>
+                        <textarea id="particulars" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter particulars"></textarea>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Category</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="salesInvoice" class="text-blue-600">
+                            <span>Sales Invoice/Official Receipt</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="approvedPurchase" class="text-blue-600">
+                            <span>Approved Purchase Request</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="proofSurrender" class="text-blue-600">
+                            <span>Proof or Surrender Waste</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="specialOrder" class="text-blue-600">
+                            <span>Special Order/Line Item Budget</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="postRepairInspection" class="text-blue-600">
+                            <span>Request for Post Repair Inspection</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="inventoryCustodian" class="text-blue-600">
+                            <span>Inventory Custodian Receipt</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="propertyAcknowledgement" class="text-blue-600">
+                            <span>Property Acknowledgement Receipt</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" name="category" value="cnas" class="text-blue-600">
+                            <span>CNAS</span>
+                        </label>
+                        <div>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" name="category" value="others" class="text-blue-600" onchange="toggleOthersInput()">
+                                <span>Others</span>
+                            </label>
+                            <div id="othersInput" class="ml-8 mt-2 hidden">
+                                <input type="text" id="othersText" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" placeholder="Please specify...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Cost -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Total Cost</label>
+                    <input type="number" id="totalCost" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter total cost (₱)">
+                </div>
+                
+                <button 
+                    type="button"
+                    onclick="saveInspectionRequest()" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl w-full">
+                    📊 Submit Inspection Request
+                </button>
+            </form>
+            
+            <div class="mt-8 space-y-4">
+                <button 
+                    onclick="goToPage1()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    ← Go Back
+                </button>
+                <button 
+                    onclick="goToPage3()" 
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    View Submitted Requests →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <div id="page3" class="min-h-screen flex items-center justify-center p-8 hidden overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full my-8">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-4xl">📊</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">All Inspection Requests</h1>
+                <p class="text-gray-600">Complete history of all submitted inspection requests</p>
+            </div>
+            
+            <div id="savedDataContainer" class="mb-8">
+                <div id="noDataMessage" class="text-center py-8 text-gray-500">
+                    <span class="text-4xl mb-4 block">📭</span>
+                    <p>No data saved yet. Go back to page 2 to save some data!</p>
+                </div>
+                
+                <div id="dataDisplay" class="hidden space-y-4">
+                    <!-- Saved data will appear here -->
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div id="editModeMessage" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 hidden">
+                    <p class="text-yellow-800 text-sm">📝 <strong>Edit Mode:</strong> Click on any "Edit Request" button to modify that specific request.</p>
+                </div>
+                <button 
+                    onclick="printAllRequests()" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    🖨️ Print All Requests
+                </button>
+                <button 
+                    onclick="goToPage2()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    ← Submit New Request
+                </button>
+                <button 
+                    onclick="goToPage1()" 
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    🏠 Home
+                </button>
+                
+                <!-- Hidden Admin Access -->
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <button 
+                        onclick="showAdminLogin()" 
+                        class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 text-sm w-full opacity-50">
+                        🔐 Admin Access
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4 - Admin Spreadsheet View -->
+    <div id="page4" class="min-h-screen flex items-center justify-center p-8 hidden overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full my-8">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-4xl">📊</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">Admin Spreadsheet View</h1>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                    <p class="text-sm text-red-800"><strong>🔐 Admin Only:</strong> This spreadsheet view is restricted to administrators only</p>
+                </div>
+            </div>
+            
+            <div id="spreadsheetContainer" class="mb-8 overflow-x-auto">
+                <div id="noSpreadsheetData" class="text-center py-8 text-gray-500">
+                    <span class="text-4xl mb-4 block">📋</span>
+                    <p>No inspection requests found. Data will appear here when requests are submitted.</p>
+                </div>
+                
+                <div id="spreadsheetDisplay" class="hidden">
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Inspection Requests Database</h3>
+                            <p class="text-sm text-gray-600" id="recordCount">0 records found</p>
+                        </div>
+                        <div class="space-x-2">
+                            <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                                📥 Export CSV
+                            </button>
+                            <button onclick="refreshSpreadsheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                                🔄 Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto border border-gray-300 rounded-lg">
+                        <table id="spreadsheetTable" class="min-w-full bg-white">
+                            <thead class="bg-gray-100">
+                                <tr class="text-xs">
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">#</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Control #</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Date</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Purchase Type</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Requested By</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Contact</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Personal Email</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Institutional Email</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Disbursing Officer</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Office/Dept</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Sectors</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Purpose</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Particulars</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Categories</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700 border-r">Total Cost</th>
+                                    <th class="px-2 py-3 text-left font-semibold text-gray-700">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="spreadsheetBody">
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <button 
+                    onclick="goToPage3()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    ← Back to Requests View
+                </button>
+                <button 
+                    onclick="logoutAdmin()" 
+                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full">
+                    🔐 Logout Admin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToPage1() {
+            document.getElementById('page1').classList.remove('hidden');
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.add('hidden');
+        }
+
+        function agreePrivacy() {
+            // User agreed to privacy terms, proceed to page 2
+            goToPage2();
+        }
+
+        function disagreePrivacy() {
+            // User disagreed, show message and close/redirect
+            alert('Thank you for your time. You have chosen not to proceed with our application.');
+            // In a real application, this would redirect to another page or close the window
+            // For demo purposes, we'll just show the message
+        }
+
+        function goToPage2() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            document.getElementById('page3').classList.add('hidden');
+        }
+
+        function goToPage3() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.remove('hidden');
+            displaySavedData();
+        }
+
+        function toggleUCSSOptions() {
+            const ucssRadio = document.querySelector('input[name="purchaseType"][value="purchases"]');
+            const ucssOptions = document.getElementById('ucssOptions');
+            
+            if (ucssRadio.checked) {
+                ucssOptions.classList.remove('hidden');
+            } else {
+                ucssOptions.classList.add('hidden');
+                // Clear UCSS sub-type selections when hiding
+                document.querySelectorAll('input[name="ucssSubType"]').forEach(cb => cb.checked = false);
+            }
+        }
+
+        function toggleOthersInput() {
+            const othersCheckbox = document.querySelector('input[name="category"][value="others"]');
+            const othersInput = document.getElementById('othersInput');
+            const othersText = document.getElementById('othersText');
+            
+            if (othersCheckbox.checked) {
+                othersInput.classList.remove('hidden');
+            } else {
+                othersInput.classList.add('hidden');
+                othersText.value = ''; // Clear the text when hiding
+            }
+        }
+
+        function saveInspectionRequest() {
+            // Get all form values
+            const purchaseType = document.querySelector('input[name="purchaseType"]:checked')?.value || '';
+            const ucssSubTypes = Array.from(document.querySelectorAll('input[name="ucssSubType"]:checked')).map(cb => cb.value);
+            const contactNumber = document.getElementById('contactNumber').value;
+            const personalEmail = document.getElementById('personalEmail').value;
+            const institutionalEmail = document.getElementById('institutionalEmail').value;
+            const requestedBy = document.getElementById('requestedBy').value;
+            const disbursingOfficer = document.getElementById('disbursingOfficer').value;
+            const officeDepartment = document.getElementById('officeDepartment').value;
+            const purpose = document.getElementById('purpose').value;
+            const particulars = document.getElementById('particulars').value;
+            const totalCost = document.getElementById('totalCost').value;
+
+            // Get selected sectors
+            const sectors = Array.from(document.querySelectorAll('input[name="sector"]:checked')).map(cb => cb.value);
+            
+            // Get selected categories
+            const categories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+            const othersText = document.getElementById('othersText').value;
+
+            // Basic validation
+            if (!purchaseType || !contactNumber || !personalEmail || !requestedBy || !disbursingOfficer || !purpose || !totalCost) {
+                alert('Please fill in all required fields before submitting!');
+                return;
+            }
+
+            if (sectors.length === 0) {
+                alert('Please select at least one sector!');
+                return;
+            }
+
+            if (categories.length === 0) {
+                alert('Please select at least one category!');
+                return;
+            }
+
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Submitting Request...';
+            button.disabled = true;
+
+            // Simulate Google Sheets API call
+            setTimeout(() => {
+                // Get existing data from localStorage (simulating Google Sheets data)
+                let savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+                
+                // Check if we're editing an existing entry
+                if (window.editingEntryId) {
+                    // Find and update existing entry
+                    const entryIndex = savedData.findIndex(entry => entry.id === window.editingEntryId);
+                    if (entryIndex !== -1) {
+                        // Update existing entry, keeping original ID and sheetRow
+                        savedData[entryIndex] = {
+                            ...savedData[entryIndex], // Keep original id, timestamp, sheetRow
+                            purchaseType: purchaseType,
+                            ucssSubTypes: ucssSubTypes,
+                            contactNumber: contactNumber,
+                            personalEmail: personalEmail,
+                            institutionalEmail: institutionalEmail,
+                            requestedBy: requestedBy,
+                            disbursingOfficer: disbursingOfficer,
+                            officeDepartment: officeDepartment,
+                            sectors: sectors,
+                            purpose: purpose,
+                            particulars: particulars,
+                            categories: categories,
+                            othersText: othersText,
+                            totalCost: parseFloat(totalCost),
+                            lastModified: new Date().toLocaleString()
+                        };
+                        
+                        // Clear editing state
+                        delete window.editingEntryId;
+                        
+                        // Remove edit notification
+                        const editNotification = document.getElementById('editNotification');
+                        if (editNotification) {
+                            editNotification.remove();
+                        }
+                        
+                        // Reset button appearance
+                        button.innerHTML = '📊 Submit Inspection Request';
+                        button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        button.classList.add('bg-green-600', 'hover:bg-green-700');
+                        
+                        // Save back to localStorage
+                        localStorage.setItem('inspectionRequests', JSON.stringify(savedData));
+                        
+                        // Clear form
+                        document.getElementById('inspectionForm').reset();
+                        
+                        // Reset button
+                        button.innerHTML = '📊 Submit Inspection Request';
+                        button.disabled = false;
+                        
+                        // Show success message
+                        alert(`✅ Inspection request updated successfully!\n📊 Row ${savedData[entryIndex].sheetRow}\n🕒 ${savedData[entryIndex].lastModified}`);
+                        return;
+                    }
+                }
+                
+                // Generate unique control number FIRST
+                const controlNumber = generateControlNumber();
+                
+                // Add new entry with timestamp and sheet row simulation
+                const newEntry = {
+                    id: Date.now(),
+                    controlNumber: controlNumber,
+                    purchaseType: purchaseType,
+                    ucssSubTypes: ucssSubTypes,
+                    contactNumber: contactNumber,
+                    personalEmail: personalEmail,
+                    institutionalEmail: institutionalEmail,
+                    requestedBy: requestedBy,
+                    disbursingOfficer: disbursingOfficer,
+                    officeDepartment: officeDepartment,
+                    sectors: sectors,
+                    purpose: purpose,
+                    particulars: particulars,
+                    categories: categories,
+                    othersText: othersText,
+                    totalCost: parseFloat(totalCost),
+                    timestamp: new Date().toLocaleString(),
+                    sheetRow: savedData.length + 2 // Simulate Google Sheets row number
+                };
+                
+                // Email notifications removed - no automatic sending
+                
+                // Add to saved data
+                savedData.push(newEntry);
+                
+                // Save back to localStorage (simulating Google Sheets storage)
+                localStorage.setItem('inspectionRequests', JSON.stringify(savedData));
+                
+                // Clear form
+                document.getElementById('inspectionForm').reset();
+                
+                // Reset button
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // Show success message with Google Sheets styling
+                alert(`✅ Inspection request submitted successfully!\n🎫 Control Number: ${controlNumber}\n📊 Added to row ${newEntry.sheetRow}\n🕒 ${newEntry.timestamp}`);
+            }, 2000); // Simulate network delay
+        }
+
+        function displaySavedData() {
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const dataDisplay = document.getElementById('dataDisplay');
+            
+            if (savedData.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                dataDisplay.classList.add('hidden');
+            } else {
+                noDataMessage.classList.add('hidden');
+                dataDisplay.classList.remove('hidden');
+                
+                // Sort by newest first (highest ID first)
+                const sortedData = savedData.sort((a, b) => b.id - a.id);
+                
+                dataDisplay.innerHTML = sortedData.map((entry, index) => `
+                    <div class="bg-green-50 rounded-lg p-6 border border-green-200 mb-4">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-semibold text-gray-800 text-lg">Request #${sortedData.length - index}</h3>
+                                ${entry.controlNumber ? `<span class="text-sm text-blue-600 font-mono">🎫 ${entry.controlNumber}</span>` : ''}
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-green-600 block">📊 Row ${entry.sheetRow}</span>
+                                <span class="text-xs text-gray-500">${entry.timestamp}</span>
+                                ${entry.lastModified ? `<span class="text-xs text-blue-500 block">✏️ Modified: ${entry.lastModified}</span>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div><strong>Purchase Type:</strong> ${entry.purchaseType}${entry.ucssSubTypes && entry.ucssSubTypes.length > 0 ? ` (${entry.ucssSubTypes.join(', ')})` : ''}</div>
+                            <div><strong>Requested By:</strong> ${entry.requestedBy}</div>
+                            <div><strong>Contact:</strong> ${entry.contactNumber}</div>
+                            <div><strong>Email:</strong> ${entry.personalEmail}</div>
+                            <div><strong>Disbursing Officer:</strong> ${entry.disbursingOfficer}</div>
+                            <div><strong>Office/Department:</strong> ${entry.officeDepartment}</div>
+                        </div>
+                        
+                        <div class="mt-4 text-sm">
+                            <div class="mb-2"><strong>Sectors:</strong> ${entry.sectors.join(', ')}</div>
+                            <div class="mb-2"><strong>Categories:</strong> ${entry.categories.join(', ')}${entry.othersText ? ` (Others: ${entry.othersText})` : ''}</div>
+                            <div class="mb-2"><strong>Purpose:</strong> ${entry.purpose}</div>
+                            <div class="mb-2"><strong>Particulars:</strong> ${entry.particulars}</div>
+                            <div class="mb-2"><strong>Total Cost:</strong> ₱${entry.totalCost.toLocaleString()}</div>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <button onclick="editEntry(${entry.id})" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center">
+                                ✏️ Edit Request
+                            </button>
+                            <button onclick="printSingleRequest(${entry.id})" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center">
+                                🖨️ Print This
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+
+
+        function editEntry(id) {
+            // Find the entry to edit
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            const entryToEdit = savedData.find(entry => entry.id === id);
+            
+            if (!entryToEdit) {
+                alert('Request not found!');
+                return;
+            }
+            
+            // Go to page 2 (form page)
+            goToPage2();
+            
+            // Populate the form with existing data
+            setTimeout(() => {
+                // Purchase Type
+                const purchaseTypeRadio = document.querySelector(`input[name="purchaseType"][value="${entryToEdit.purchaseType}"]`);
+                if (purchaseTypeRadio) {
+                    purchaseTypeRadio.checked = true;
+                    toggleUCSSOptions(); // Show UCSS options if needed
+                }
+                
+                // UCSS Sub Types
+                if (entryToEdit.ucssSubTypes && entryToEdit.ucssSubTypes.length > 0) {
+                    entryToEdit.ucssSubTypes.forEach(subType => {
+                        const checkbox = document.querySelector(`input[name="ucssSubType"][value="${subType}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+                
+                // Contact Information
+                document.getElementById('contactNumber').value = entryToEdit.contactNumber || '';
+                document.getElementById('personalEmail').value = entryToEdit.personalEmail || '';
+                document.getElementById('institutionalEmail').value = entryToEdit.institutionalEmail || '';
+                document.getElementById('requestedBy').value = entryToEdit.requestedBy || '';
+                document.getElementById('disbursingOfficer').value = entryToEdit.disbursingOfficer || '';
+                document.getElementById('officeDepartment').value = entryToEdit.officeDepartment || '';
+                
+                // Sectors
+                if (entryToEdit.sectors && entryToEdit.sectors.length > 0) {
+                    entryToEdit.sectors.forEach(sector => {
+                        const checkbox = document.querySelector(`input[name="sector"][value="${sector}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+                
+                // Purpose and Particulars
+                document.getElementById('purpose').value = entryToEdit.purpose || '';
+                document.getElementById('particulars').value = entryToEdit.particulars || '';
+                
+                // Categories
+                if (entryToEdit.categories && entryToEdit.categories.length > 0) {
+                    entryToEdit.categories.forEach(category => {
+                        const checkbox = document.querySelector(`input[name="category"][value="${category}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            if (category === 'others') {
+                                toggleOthersInput();
+                            }
+                        }
+                    });
+                }
+                
+                // Others text
+                if (entryToEdit.othersText) {
+                    document.getElementById('othersText').value = entryToEdit.othersText;
+                }
+                
+                // Total Cost
+                document.getElementById('totalCost').value = entryToEdit.totalCost || '';
+                
+                // Store the ID of the entry being edited
+                window.editingEntryId = id;
+                
+                // Change the submit button to indicate editing
+                const submitButton = document.querySelector('button[onclick="saveInspectionRequest()"]');
+                submitButton.innerHTML = '✏️ Update Inspection Request';
+                submitButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                
+                // Show edit notification
+                const editNotification = document.createElement('div');
+                editNotification.id = 'editNotification';
+                editNotification.className = 'bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4';
+                editNotification.innerHTML = '<p class="text-sm text-blue-800"><strong>Edit Mode:</strong> You are currently editing an existing request. Click "Update" to save changes.</p>';
+                
+                const form = document.getElementById('inspectionForm');
+                form.parentNode.insertBefore(editNotification, form);
+                
+                // Scroll to top of form
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            }, 100); // Small delay to ensure page transition completes
+        }
+
+        function generateControlNumber() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            
+            // Get existing data to determine next sequence number
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            const today = `${year}${month}${date}`;
+            
+            // Find all control numbers from today
+            const todayNumbers = savedData
+                .filter(entry => entry.controlNumber && entry.controlNumber.startsWith(today))
+                .map(entry => {
+                    const parts = entry.controlNumber.split('-');
+                    return parts.length > 1 ? parseInt(parts[1]) : 0;
+                })
+                .filter(num => !isNaN(num));
+            
+            // Get next sequence number
+            const nextSequence = todayNumbers.length > 0 ? Math.max(...todayNumbers) + 1 : 1;
+            const sequenceStr = String(nextSequence).padStart(3, '0');
+            
+            return `${today}-${sequenceStr}`;
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete all inspection requests? This cannot be undone.')) {
+                localStorage.removeItem('inspectionRequests');
+                displaySavedData();
+                alert('All inspection requests have been cleared! 🗑️');
+            }
+        }
+
+        // Admin Functions
+        function showAdminLogin() {
+            const password = prompt('🔐 Enter Admin Password:');
+            if (password === 'admin123') {
+                // Store admin session
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                goToPage4();
+            } else if (password !== null) {
+                alert('❌ Incorrect password. Access denied.');
+            }
+        }
+
+        function goToPage4() {
+            // Check if admin is logged in
+            if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+                alert('❌ Admin access required. Please login first.');
+                return;
+            }
+            
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.add('hidden');
+            document.getElementById('page4').classList.remove('hidden');
+            displaySpreadsheet();
+        }
+
+        function displaySpreadsheet() {
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            const noDataMessage = document.getElementById('noSpreadsheetData');
+            const spreadsheetDisplay = document.getElementById('spreadsheetDisplay');
+            const recordCount = document.getElementById('recordCount');
+            const spreadsheetBody = document.getElementById('spreadsheetBody');
+            
+            if (savedData.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                spreadsheetDisplay.classList.add('hidden');
+            } else {
+                noDataMessage.classList.add('hidden');
+                spreadsheetDisplay.classList.remove('hidden');
+                recordCount.textContent = `${savedData.length} records found`;
+                
+                // Sort by newest first
+                const sortedData = savedData.sort((a, b) => b.id - a.id);
+                
+                spreadsheetBody.innerHTML = sortedData.map((entry, index) => `
+                    <tr class="border-b hover:bg-gray-50 text-xs">
+                        <td class="px-2 py-2 border-r">${index + 1}</td>
+                        <td class="px-2 py-2 border-r font-mono text-blue-600">${entry.controlNumber || 'N/A'}</td>
+                        <td class="px-2 py-2 border-r">${entry.timestamp}</td>
+                        <td class="px-2 py-2 border-r">${entry.purchaseType}${entry.ucssSubTypes && entry.ucssSubTypes.length > 0 ? ` (${entry.ucssSubTypes.join(', ')})` : ''}</td>
+                        <td class="px-2 py-2 border-r">${entry.requestedBy}</td>
+                        <td class="px-2 py-2 border-r">${entry.contactNumber}</td>
+                        <td class="px-2 py-2 border-r">${entry.personalEmail}</td>
+                        <td class="px-2 py-2 border-r">${entry.institutionalEmail}</td>
+                        <td class="px-2 py-2 border-r">${entry.disbursingOfficer}</td>
+                        <td class="px-2 py-2 border-r">${entry.officeDepartment}</td>
+                        <td class="px-2 py-2 border-r">${entry.sectors.join(', ')}</td>
+                        <td class="px-2 py-2 border-r max-w-xs truncate" title="${entry.purpose}">${entry.purpose}</td>
+                        <td class="px-2 py-2 border-r max-w-xs truncate" title="${entry.particulars}">${entry.particulars}</td>
+                        <td class="px-2 py-2 border-r">${entry.categories.join(', ')}${entry.othersText ? ` (${entry.othersText})` : ''}</td>
+                        <td class="px-2 py-2 border-r font-semibold">₱${entry.totalCost.toLocaleString()}</td>
+                        <td class="px-2 py-2">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                ${entry.lastModified ? 'Modified' : 'Submitted'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function refreshSpreadsheet() {
+            displaySpreadsheet();
+            alert('📊 Spreadsheet refreshed successfully!');
+        }
+
+        function exportToCSV() {
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            
+            if (savedData.length === 0) {
+                alert('❌ No data to export!');
+                return;
+            }
+
+            // Create CSV headers
+            const headers = [
+                'Row #', 'Control Number', 'Date Submitted', 'Purchase Type', 'UCSS Sub Types',
+                'Requested By', 'Contact Number', 'Personal Email', 'Institutional Email',
+                'Disbursing Officer', 'Office/Department', 'Sectors', 'Purpose', 'Particulars',
+                'Categories', 'Others Text', 'Total Cost', 'Last Modified', 'Status'
+            ];
+
+            // Create CSV rows
+            const csvRows = [headers.join(',')];
+            
+            savedData.forEach((entry, index) => {
+                const row = [
+                    index + 1,
+                    `"${entry.controlNumber || 'N/A'}"`,
+                    `"${entry.timestamp}"`,
+                    `"${entry.purchaseType}"`,
+                    `"${entry.ucssSubTypes ? entry.ucssSubTypes.join('; ') : ''}"`,
+                    `"${entry.requestedBy}"`,
+                    `"${entry.contactNumber}"`,
+                    `"${entry.personalEmail}"`,
+                    `"${entry.institutionalEmail}"`,
+                    `"${entry.disbursingOfficer}"`,
+                    `"${entry.officeDepartment}"`,
+                    `"${entry.sectors.join('; ')}"`,
+                    `"${entry.purpose.replace(/"/g, '""')}"`,
+                    `"${entry.particulars.replace(/"/g, '""')}"`,
+                    `"${entry.categories.join('; ')}"`,
+                    `"${entry.othersText || ''}"`,
+                    entry.totalCost,
+                    `"${entry.lastModified || ''}"`,
+                    `"${entry.lastModified ? 'Modified' : 'Submitted'}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            // Create and download CSV file
+            const csvContent = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `inspection_requests_${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alert(`📥 CSV file exported successfully!\nFilename: inspection_requests_${new Date().toISOString().split('T')[0]}.csv\nRecords: ${savedData.length}`);
+            } else {
+                alert('❌ CSV export not supported in this browser.');
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('adminLoggedIn');
+            goToPage3();
+            alert('🔐 Admin logged out successfully.');
+        }
+
+        function printAllRequests() {
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            
+            if (savedData.length === 0) {
+                alert('❌ No requests to print!');
+                return;
+            }
+
+            // Sort by newest first
+            const sortedData = savedData.sort((a, b) => b.id - a.id);
+            
+            // Create print content
+            const printContent = createPrintContent(sortedData, 'All Inspection Requests');
+            
+            // Create temporary print container
+            const printContainer = document.createElement('div');
+            printContainer.className = 'print-content';
+            printContainer.innerHTML = printContent;
+            printContainer.style.display = 'none';
+            
+            document.body.appendChild(printContainer);
+            
+            // Print
+            window.print();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(printContainer);
+            }, 1000);
+        }
+
+        function printSingleRequest(id) {
+            const savedData = JSON.parse(localStorage.getItem('inspectionRequests') || '[]');
+            const requestToPrint = savedData.find(entry => entry.id === id);
+            
+            if (!requestToPrint) {
+                alert('❌ Request not found!');
+                return;
+            }
+            
+            // Create print content for single request
+            const printContent = createPrintContent([requestToPrint], 'Inspection Request Details');
+            
+            // Create temporary print container
+            const printContainer = document.createElement('div');
+            printContainer.className = 'print-content';
+            printContainer.innerHTML = printContent;
+            printContainer.style.display = 'none';
+            
+            document.body.appendChild(printContainer);
+            
+            // Print
+            window.print();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(printContainer);
+            }, 1000);
+        }
+
+        function createPrintContent(data, title) {
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            let content = `
+                <div class="print-header">
+                    <h1 style="font-size: 24px; margin: 0; font-weight: bold;">INSPECTION REQUEST SYSTEM</h1>
+                    <h2 style="font-size: 18px; margin: 10px 0; color: #666;">${title}</h2>
+                    <p style="margin: 5px 0; font-size: 14px;">Generated on: ${currentDate}</p>
+                    <p style="margin: 5px 0; font-size: 14px;">Total Records: ${data.length}</p>
+                </div>
+            `;
+
+            data.forEach((entry, index) => {
+                if (index > 0) {
+                    content += '<div class="print-page-break"></div>';
+                }
+                
+                content += `
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 20px; text-align: center; background-color: #f0f0f0; padding: 10px; border: 2px solid #000;">
+                            REQUEST #${data.length - index} ${entry.controlNumber ? `- Control: ${entry.controlNumber}` : ''}
+                        </h3>
+                        
+                        <table class="print-table">
+                            <tr>
+                                <th style="width: 25%;">Field</th>
+                                <th style="width: 75%;">Details</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Date Submitted</strong></td>
+                                <td>${entry.timestamp}</td>
+                            </tr>
+                            ${entry.lastModified ? `
+                            <tr>
+                                <td><strong>Last Modified</strong></td>
+                                <td>${entry.lastModified}</td>
+                            </tr>
+                            ` : ''}
+                            <tr>
+                                <td><strong>Control Number</strong></td>
+                                <td>${entry.controlNumber || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Purchase Type</strong></td>
+                                <td>${entry.purchaseType}${entry.ucssSubTypes && entry.ucssSubTypes.length > 0 ? ` (${entry.ucssSubTypes.join(', ')})` : ''}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Requested By</strong></td>
+                                <td>${entry.requestedBy}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contact Number</strong></td>
+                                <td>${entry.contactNumber}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Personal Email</strong></td>
+                                <td>${entry.personalEmail}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Institutional Email</strong></td>
+                                <td>${entry.institutionalEmail}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Disbursing Officer</strong></td>
+                                <td>${entry.disbursingOfficer}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Office/Department</strong></td>
+                                <td>${entry.officeDepartment}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sectors</strong></td>
+                                <td>${entry.sectors.join(', ')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Purpose</strong></td>
+                                <td>${entry.purpose}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Particulars</strong></td>
+                                <td>${entry.particulars}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Categories</strong></td>
+                                <td>${entry.categories.join(', ')}${entry.othersText ? ` (Others: ${entry.othersText})` : ''}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Cost</strong></td>
+                                <td>₱${entry.totalCost.toLocaleString()}</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="print-signature">
+                            <div>
+                                <div class="print-signature-line">Requested By</div>
+                                <p style="margin: 5px 0; font-size: 12px;">${entry.requestedBy}</p>
+                            </div>
+                            <div>
+                                <div class="print-signature-line">Disbursing Officer</div>
+                                <p style="margin: 5px 0; font-size: 12px;">${entry.disbursingOfficer}</p>
+                            </div>
+                            <div>
+                                <div class="print-signature-line">Date Approved</div>
+                                <p style="margin: 5px 0; font-size: 12px;">_______________</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return content;
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96af2df8a3559cac',t:'MTc1NDQ5MDA3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
